@@ -1,0 +1,12 @@
+CREATE TABLE malpedia_ThreatActors1 ( id TEXT, name TEXT, Coverage TEXT, Country TEXT )
+CREATE TABLE malpedia_ThreatActors2 ( name TEXT, Associated_Families TEXT, Description TEXT )
+CREATE TABLE malpedia_malware ( id TEXT, name TEXT, OS TEXT, Description TEXT )
+CREATE TABLE mitre_TechniquesEnterprise ( id TEXT, name TEXT, Description TEXT )
+CREATE TABLE mitre_TechniquesICS ( id TEXT, name TEXT, Description TEXT )
+CREATE TABLE mitre_TechniquesMobile ( id TEXT, name TEXT, Description TEXT )
+CREATE TABLE mitre_ThreatActors ( id TEXT, name TEXT, Associated_Groups TEXT, Description TEXT )
+CREATE TABLE mitre_malware ( id TEXT, name TEXT, Associated_Software TEXT, Description TEXT )
+
+
+
+pip install flask-cors
