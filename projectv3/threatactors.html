@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Data from Flask API</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            position: relative; /* Ensure relative positioning for absolute button */
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e9ecef;
+        }
+        .footer {
+            background-color: #0a0000;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer .contact-info {
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        /* Style for home button */
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px; /* Position on the right */
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .home-button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .home-button i {
+            font-size: 1.2rem;
+        }
+    </style>
+    <!-- Font Awesome for the home icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="home-button">
+            <i class="fas fa-home"></i> Home
+        </a>
+
+        <h1>THREAT ACTORS</h1>
+        
+        <div id="data-container">
+            <!-- Data will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchData);
+
+        function fetchData() {
+            const endpoints = [
+                'http://127.0.0.1:5000/mitre_threat_actors',
+                'http://127.0.0.1:5000/threat_actors1',
+                'http://127.0.0.1:5000/threat_actors2'
+            ];
+
+            endpoints.forEach(endpoint => {
+                fetch(endpoint)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        displayData(endpoint, data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+            });
+        }
+
+        function displayData(endpoint, data) {
+            const container = document.getElementById('data-container');
+            const heading = document.createElement('h2');
+            switch (endpoint) {
+                case 'http://127.0.0.1:5000/mitre_threat_actors':
+                    heading.textContent = 'MITRE Threat Actors';
+                    break;
+                case 'http://127.0.0.1:5000/threat_actors1':
+                    heading.textContent = 'Malpedia Threat Actors';
+                    break;
+                case 'http://127.0.0.1:5000/threat_actors2':
+                    heading.textContent = 'Malpedia Threat Actors';
+                    break;
+                default:
+                    break;
+            }
+            container.appendChild(heading);
+
+            const table = document.createElement('table');
+            const headerRow = document.createElement('tr');
+            switch (endpoint) {
+                case 'http://127.0.0.1:5000/threat_actors1':
+                    headerRow.innerHTML = '<th>ID</th><th>Name</th><th>Coverage</th><th>Country</th>';
+                    break;
+                case 'http://127.0.0.1:5000/threat_actors2':
+                    headerRow.innerHTML = '<th>Name</th><th>Associated Families</th><th>Description</th>';
+                    break;
+                case 'http://127.0.0.1:5000/mitre_threat_actors':
+                    headerRow.innerHTML = '<th>ID</th><th>Name</th><th>Associated Groups</th><th>Description</th>';
+                    break;
+                default:
+                    break;
+            }
+            table.appendChild(headerRow);
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                Object.values(item).forEach(value => {
+                    const td = document.createElement('td');
+                    td.textContent = value;
+                    row.appendChild(td);
+                });
+                table.appendChild(row);
+            });
+
+            container.appendChild(table);
+        }
+    </script>
+</body>
+</html>
